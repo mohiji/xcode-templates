@@ -2,10 +2,8 @@
  * Main.cpp
  * Entry point to the game.
  *
- *  ___PROJECTNAME___
- *
- *  Created by ___FULLUSERNAME___ on ___DATE___.
- *  Copyright ___YEAR___ ___ORGANIZATIONNAME___. All rights reserved.
+ * This file is part of Jonathan Fischer's Xcode Game Template:
+ * https://github.com/mohiji/xcode-templates
  */
 
 #include <cstdio>

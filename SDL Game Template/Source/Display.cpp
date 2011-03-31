@@ -1,10 +1,8 @@
 /**
  * Display.cpp
  *
- *  ___PROJECTNAME___
- *
- *  Created by ___FULLUSERNAME___ on ___DATE___.
- *  Copyright ___YEAR___ ___ORGANIZATIONNAME___. All rights reserved.
+ * This file is part of Jonathan Fischer's Xcode Game Template:
+ * https://github.com/mohiji/xcode-templates
  */
 
 #include "Display.h"

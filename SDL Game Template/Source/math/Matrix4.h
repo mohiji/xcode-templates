@@ -2,10 +2,8 @@
  * Matrix4.h
  * 4x4 matrices.
  *
- *  ___PROJECTNAME___
- *
- *  Created by ___FULLUSERNAME___ on ___DATE___.
- *  Copyright ___YEAR___ ___ORGANIZATIONNAME___. All rights reserved.
+ * This file is part of Jonathan Fischer's Xcode Game Template:
+ * https://github.com/mohiji/xcode-templates
  */
 
 #ifndef Matrix4_h
