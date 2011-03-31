@@ -50,7 +50,7 @@ How do I use it?
 Download and/or check out this repository, then copy the "SDL Game
 Template" folder to:
 
-~/Library/Application Support/Developer/Shared/Xcode/Project Templates/Application
+    ~/Library/Application Support/Developer/Shared/Xcode/Project Templates/Application
 
 Restart Xcode, and click Create a new Xcode project.  On the left
 there should be a section named "User Templates".  Under that, choose
@@ -60,13 +60,13 @@ that, click Choose, and you'll be on your way.
 You'll also need both the SDL and SDL_image frameworks installed.  You
 can grab them from:
 
-http://www.libsdl.org/download-1.2.php and
-http://www.libsdl.org/projects/SDL_image/
+ * [http://www.libsdl.org/download-1.2.php](http://www.libsdl.org/download-1.2.php SDL) and
+ * [http://www.libsdl.org/projects/SDL_image/](http://www.libsdl.org/projects/SDL_image/ SDL_image)
 
 Drag the .framework directories out of the disk image files to
-/Library/Frameworks.  (or ~/Library/Frameworks, if you prefer)
+`/Library/Frameworks`.  (or `~/Library/Frameworks`, if you prefer)
 
 How do I use the code?
 ======================
 
-It's pretty self-explanatory; checkout Main.cpp for an example.
+It's pretty self-explanatory; check out Main.cpp for an example.
