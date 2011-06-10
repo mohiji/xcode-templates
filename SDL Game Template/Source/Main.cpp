@@ -13,12 +13,15 @@
 #include <SDL_opengl.h>
 #include "Display.h"
 #include "Constants.h"
+#include "SimpleFont.h"
 #include "Texture.h"
 #include "Utility.h"
 
 Texture *logoTexture = NULL;
 float vertices[4];
 float texcoords[4];
+
+SimpleFont *demoFont = NULL;
 
 int Init()
 {
@@ -41,15 +44,23 @@ int Init()
     texcoords[2] = (float)logoTexture->sourceWidth / (float)logoTexture->width;
     texcoords[3] = (float)logoTexture->sourceHeight / (float)logoTexture->height;
 
+	demoFont = SimpleFont::loadFromFile(PathForResource("Orbitron-Regular.ttf"), 20);
+	if (!demoFont)
+	{
+		fprintf(stderr, "Unable to load Orbitron-Regular.ttf!\n");
+		return -1;
+	}
+	
     return 0;
 }
 
 void Cleanup()
 {
     delete logoTexture;
+	delete demoFont;
 }
 
-void Draw()
+void Draw(float currentTime)
 {
     // Set up the projection matrix and viewport for standard 2D drawing
     glViewport(0, 0, kWindowWidth, kWindowHeight);
@@ -57,7 +68,11 @@ void Draw()
     glLoadIdentity();
     glOrtho(0, kWindowWidth, 0, kWindowHeight, -1, 1);
     
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	
     glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, logoTexture->handle);
     glColor3f(1, 1, 1);
     
     glBegin(GL_QUADS);
@@ -70,6 +85,8 @@ void Draw()
     glTexCoord2f(texcoords[2], texcoords[3]);
     glVertex2f(vertices[2], vertices[1]);
     glEnd();
+	
+	demoFont->drawFormattedText(40, kWindowHeight - 40, "Seconds Elapsed: %.4f", currentTime);
 }
 
 void MainLoop()
@@ -126,7 +143,7 @@ void MainLoop()
         glClearColor(0.0, 0.0, 0.0, 1.0);
         glClear(GL_COLOR_BUFFER_BIT);
         
-        Draw();
+        Draw(currentTime);
         
 		SDL_GL_SwapBuffers();
 		
@@ -143,8 +160,6 @@ int SDL_main(int argc, char **argv)
         fprintf(stderr, "Unable to open an OpenGL window!\n");
         goto cleanup;
     }
-    
-    glEnable(GL_TEXTURE_2D);
     
     if (Init() != 0)
     {
