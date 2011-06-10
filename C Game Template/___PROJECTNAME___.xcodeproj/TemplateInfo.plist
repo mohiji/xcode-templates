@@ -1,0 +1,11 @@
+{
+	FilesToRename = {
+		"Source/osx/Application.pch" = "Source/osx/ÇPROJECTNAMEÈ_Prefix.pch";
+	};
+	FilesToMacroExpand = (
+		"Source/osx/ÇPROJECTNAMEÈ_Prefix.pch",
+		"Info.plist",
+		"Resources/English.lproj/InfoPlist.strings",
+	);
+	Description = "This project is a ready-to-go template for quick prototyping.";
+}
