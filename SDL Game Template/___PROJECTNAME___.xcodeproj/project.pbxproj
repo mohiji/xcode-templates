@@ -25,6 +25,9 @@
 		27DF11AE12CE82A600EE15AF /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27DF11A212CE82A600EE15AF /* Main.cpp */; };
 		27DF11B112CE82A600EE15AF /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DF11AB12CE82A600EE15AF /* SDLMain.m */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		AB190FAF13A2BF6A00515D00 /* SimpleFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AB190FAD13A2BF6A00515D00 /* SimpleFont.cpp */; };
+		AB190FB813A2C4E600515D00 /* SDL_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB190FB713A2C4E600515D00 /* SDL_ttf.framework */; };
+		AB190FE113A2C60400515D00 /* Orbitron-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AB190FE013A2C60400515D00 /* Orbitron-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -75,6 +78,10 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		8D1107320486CEB800E47090 /* ___PROJECTNAME___.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "___PROJECTNAME___.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB190FAD13A2BF6A00515D00 /* SimpleFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleFont.cpp; sourceTree = "<group>"; };
+		AB190FAE13A2BF6A00515D00 /* SimpleFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleFont.h; sourceTree = "<group>"; };
+		AB190FB713A2C4E600515D00 /* SDL_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_ttf.framework; path = Library/Frameworks/SDL_ttf.framework; sourceTree = SDKROOT; };
+		AB190FE013A2C60400515D00 /* Orbitron-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Orbitron-Regular.ttf"; path = "Resources/Orbitron-Regular.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +93,7 @@
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				002F3C0109D093BD00EBEB88 /* OpenGL.framework in Frameworks */,
 				27696006134529B5003750C2 /* SDL_image.framework in Frameworks */,
+				AB190FB813A2C4E600515D00 /* SDL_ttf.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,6 +103,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AB190FB713A2C4E600515D00 /* SDL_ttf.framework */,
 				002F39F909D0881F00EBEB88 /* SDL.framework */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
 				002F3C0009D093BD00EBEB88 /* OpenGL.framework */,
@@ -153,6 +162,8 @@
 				27695F2713451C0E003750C2 /* Constants.h */,
 				27DF119E12CE82A600EE15AF /* Display.cpp */,
 				27DF119F12CE82A600EE15AF /* Display.h */,
+				AB190FAD13A2BF6A00515D00 /* SimpleFont.cpp */,
+				AB190FAE13A2BF6A00515D00 /* SimpleFont.h */,
 				27DF11A212CE82A600EE15AF /* Main.cpp */,
 				27695FE413452892003750C2 /* Texture.cpp */,
 				27695FE513452892003750C2 /* Texture.h */,
@@ -189,6 +200,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				AB190FE013A2C60400515D00 /* Orbitron-Regular.ttf */,
 				27DF116112CE80DC00EE15AF /* English.lproj */,
 				27DF116512CE80E000EE15AF /* Info.plist */,
 				2769601A13452BB9003750C2 /* logo.png */,
@@ -258,6 +270,7 @@
 			files = (
 				27DF116412CE80DC00EE15AF /* InfoPlist.strings in Resources */,
 				2769601B13452BB9003750C2 /* logo.png in Resources */,
+				AB190FE113A2C60400515D00 /* Orbitron-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -279,6 +292,7 @@
 				276960001345292D003750C2 /* Utility.cpp in Sources */,
 				2769600E13452B67003750C2 /* File_Utilities.mm in Sources */,
 				2769605513452FC1003750C2 /* ByteOrder.cpp in Sources */,
+				AB190FAF13A2BF6A00515D00 /* SimpleFont.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -349,8 +363,10 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					"$(HOME)/Library/Frameworks/SDL_ttf.framework/Headers",
 					"$(HOME)/Library/Frameworks/SDL_image.framework/Headers",
 					"$(HOME)/Library/Frameworks/SDL.framework/Headers",
+					/Library/Frameworks/SDL_ttf.framework/Headers,
 					/Library/Frameworks/SDL_image.framework/Headers,
 					/Library/Frameworks/SDL.framework/Headers,
 					"$(HEADER_SEARCH_PATHS)",
