@@ -11,51 +11,64 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include <SDL_image.h>
+#include <assert.h>
 
 Texture::Texture()
 {
-	handle = 0;
 	width = 0;
 	height = 0;
-	sourceWidth = 0;
-	sourceHeight = 0;
+	handle = 0;
 }
 
 Texture::~Texture()
 {
-	Texture_releaseHandle(this);
+	releaseHandle();
 }
 
-Texture* Texture_loadFromFile(const char *filename)
+void Texture::ensureHandle()
 {
-	if (!filename || !filename[0]) return NULL;
+	if (handle == 0)
+	{
+		glGenTextures(1, &handle);
+	}
+}
+
+void Texture::releaseHandle()
+{
+	if (handle != 0)
+	{
+		glDeleteTextures(1, &handle);
+		handle = 0;
+	}
+}
+
+bool Texture::loadFromFile(const char *filename)
+{
+	if (!filename || !filename[0]) return false;
 	
 	int w, h;
-	SDL_Surface *source, *image;
+	SDL_Surface *source, *converted;
 	SDL_Rect area;
-	Texture *texture;
 	
-	// Load the texture from disk
 	source = IMG_Load(filename);
 	if (source == NULL)
 	{
-		return NULL;
+		return false;
 	}
 	
-	// Use the surface width & height expanded to the next powers of two
-	w = NearestPowerOfTwo(source->w);
-	h = NearestPowerOfTwo(source->h);
-	
+	// Make sure that the texture is in a format OpenGL will be happy with
+	w = source->w;
+	h = source->h;
 #if SDL_BYTEORDER == SDL_LIL_ENDIAN
-	image = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 32, 0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
+	converted = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 32, 0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
 #else
-	image = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 32, 0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff);
+	converted = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 32, 0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff);
 #endif
 	
-	if( image == NULL)
+	if (converted == NULL)
 	{
 		SDL_FreeSurface(source);
-		return NULL;
+		return false;
 	}
 	
 	// Turn off source alpha on this image if it's on
@@ -69,35 +82,23 @@ Texture* Texture_loadFromFile(const char *filename)
 	area.y = 0;
 	area.w = source->w;
 	area.h = source->h;
-	SDL_BlitSurface(source, &area, image, &area);
+	SDL_BlitSurface(source, &area, converted, &area);
 	
-	// Don't need the extra image anymore
+	// Don't need the original image anymore
 	SDL_FreeSurface(source);
 	
-	// Allocate a texture for it
-	texture = new Texture();
-	glGenTextures(1, &texture->handle);
+	ensureHandle();
+	assert (handle != 0);
 	
-	// Upload the texture's data to OpenGL
-	glBindTexture(GL_TEXTURE_2D, texture->handle);
-	
-	// Save the new width/height and the source surface
-	texture->width = w;
-	texture->height = h;
-	texture->sourceWidth = area.w;
-	texture->sourceHeight = area.h;
-	
+	// Upload the texture data to OpenGL
+	glBindTexture(GL_TEXTURE_2D, handle);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D,	0, GL_RGBA,	w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
+	glTexImage2D(GL_TEXTURE_2D,	0, GL_RGBA,	w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, converted->pixels);
 	
-	SDL_FreeSurface(image);
-	return texture;
-}
-
-void Texture_releaseHandle(Texture *texture)
-{
-	if (!texture) return;
-	glDeleteTextures(1, &texture->handle);
+	SDL_FreeSurface(converted);
+	width = w;
+	height = h;
+	return true;
 }
 

@@ -17,7 +17,7 @@
 #include "Texture.h"
 #include "Utility.h"
 
-Texture *logoTexture = NULL;
+Texture logoTexture;
 float vertices[4];
 float texcoords[4];
 
@@ -25,8 +25,7 @@ SimpleFont *demoFont = NULL;
 
 int Init()
 {
-    logoTexture = Texture_loadFromFile(PathForResource("logo.png"));
-    if (!logoTexture)
+    if (!logoTexture.loadFromFile(PathForResource("logo.png")))
     {
         fprintf(stderr, "Unable to load logo.png!\n");
         return -1;
@@ -34,15 +33,15 @@ int Init()
       
     // Precalculate vertices and texture coordinates to draw that logo
     // centered on the window.
-    vertices[0] = (kWindowWidth / 2.0f) - (logoTexture->sourceWidth / 2.0f);
-    vertices[1] = (kWindowHeight / 2.0f) - (logoTexture->sourceHeight / 2.0f);
-    vertices[2] = vertices[0] + logoTexture->sourceWidth;
-    vertices[3] = vertices[1] + logoTexture->sourceHeight;
+    vertices[0] = (kWindowWidth / 2.0f) - (logoTexture.width / 2.0f);
+    vertices[1] = (kWindowHeight / 2.0f) - (logoTexture.height / 2.0f);
+    vertices[2] = vertices[0] + logoTexture.width;
+    vertices[3] = vertices[1] + logoTexture.height;
     
     texcoords[0] = 0;
     texcoords[1] = 0;
-    texcoords[2] = (float)logoTexture->sourceWidth / (float)logoTexture->width;
-    texcoords[3] = (float)logoTexture->sourceHeight / (float)logoTexture->height;
+    texcoords[2] = 1.0f;
+    texcoords[3] = 1.0f;
 
 	demoFont = SimpleFont::loadFromFile(PathForResource("Orbitron-Regular.ttf"), 20);
 	if (!demoFont)
@@ -56,7 +55,7 @@ int Init()
 
 void Cleanup()
 {
-    delete logoTexture;
+	logoTexture.releaseHandle();
 	delete demoFont;
 }
 
@@ -72,7 +71,7 @@ void Draw(float currentTime)
 	glLoadIdentity();
 	
     glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, logoTexture->handle);
+	glBindTexture(GL_TEXTURE_2D, logoTexture.handle);
     glColor3f(1, 1, 1);
     
     glBegin(GL_QUADS);

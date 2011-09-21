@@ -12,25 +12,23 @@
 
 #include <SDL_opengl.h>
 
-struct Texture
+class Texture
 {
-	GLuint handle;
+public:
+	Texture();
+	~Texture();
 	
-	// Width and height of the OpenGL texture
+	// Dimensions of the texture
 	int width;
 	int height;
 	
-	// Width and height of the image file that
-	// the texture was loaded from.
-	int sourceWidth;
-	int sourceHeight;
+	// OpenGL texture handle
+	GLuint handle;
 	
-	// Default constructor initializes members to nil/0
-	Texture();
-	~Texture();
+	bool loadFromFile(const char *fileName);
+	
+	void ensureHandle();
+	void releaseHandle();
 };
-
-Texture* Texture_loadFromFile(const char *filename);
-void     Texture_releaseHandle(Texture *texture);
 
 #endif // include guard
