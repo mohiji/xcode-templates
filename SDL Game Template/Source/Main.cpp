@@ -21,7 +21,7 @@ Texture logoTexture;
 float vertices[4];
 float texcoords[4];
 
-SimpleFont *demoFont = NULL;
+SimpleFont demoFont;
 
 int Init()
 {
@@ -43,8 +43,7 @@ int Init()
     texcoords[2] = 1.0f;
     texcoords[3] = 1.0f;
 
-	demoFont = SimpleFont::loadFromFile(PathForResource("Orbitron-Regular.ttf"), 20);
-	if (!demoFont)
+	if (!demoFont.loadFromFile(PathForResource("Orbitron-Regular.ttf"), 20))
 	{
 		fprintf(stderr, "Unable to load Orbitron-Regular.ttf!\n");
 		return -1;
@@ -56,7 +55,7 @@ int Init()
 void Cleanup()
 {
 	logoTexture.releaseHandle();
-	delete demoFont;
+	demoFont.releaseTextureHandle();
 }
 
 void Draw(float currentTime)
@@ -85,7 +84,7 @@ void Draw(float currentTime)
     glVertex2f(vertices[2], vertices[1]);
     glEnd();
 	
-	demoFont->drawFormattedText(40, kWindowHeight - 40, "Seconds Elapsed: %.4f", currentTime);
+	demoFont.drawFormattedText(40, kWindowHeight - 40, "Seconds Elapsed: %.4f", currentTime);
 }
 
 void MainLoop()

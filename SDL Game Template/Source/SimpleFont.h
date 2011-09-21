@@ -12,19 +12,22 @@
 #include <SDL_ttf.h>
 #include <SDL_opengl.h>
 
-struct SimpleFont
+class SimpleFont
 {
-	TTF_Font *ttfFont;
-	GLuint    textureHandle;
-	GLfloat   textureCoordinates[4];
-	
+public:
 	SimpleFont();
 	~SimpleFont();
 	
-	void ensureTextureHandle();
+	bool loadFromFile(const char *filename, int pointSize);
 	void drawFormattedText(float x, float y, const char *format, ...);
 	
-	static SimpleFont *loadFromFile(const char *fileName, int pointSize);
+	void ensureTextureHandle();
+	void releaseTextureHandle();
+	
+private:
+	TTF_Font *ttfFont_;
+	GLuint    textureHandle_;
+	GLfloat   textureCoordinates_[4];
 };
 
 #endif /* include guard */

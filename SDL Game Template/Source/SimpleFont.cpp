@@ -84,37 +84,47 @@ static int copySurfaceToTexture(SDL_Surface *surface, GLfloat *texCoords)
 
 SimpleFont::SimpleFont()
 {
-	ttfFont = NULL;
-	textureHandle = 0;
+	ttfFont_ = NULL;
+	textureHandle_ = 0;
 }
 
 SimpleFont::~SimpleFont()
 {
-	if (ttfFont != NULL)
+	if (ttfFont_ != NULL)
 	{
-		TTF_CloseFont(ttfFont);
+		TTF_CloseFont(ttfFont_);
 	}
 	
-	if (textureHandle != 0)
+	if (textureHandle_ != 0)
 	{
-		glDeleteTextures(1, &textureHandle);
+		glDeleteTextures(1, &textureHandle_);
 	}
 }
 
-void SimpleFont::ensureTextureHandle()
+bool SimpleFont::loadFromFile(const char *fileName, int pointSize)
 {
-	if (textureHandle == 0)
+	ensureInitialized();
+	
+	if (ttfFont_ != NULL)
 	{
-		glGenTextures(1, &textureHandle);
+		TTF_CloseFont(ttfFont_);
+		ttfFont_ = NULL;
 	}
-	glBindTexture(GL_TEXTURE_2D, textureHandle);
+	
+	ttfFont_ = TTF_OpenFont(fileName, pointSize);
+	if (ttfFont_ == NULL)
+	{
+		return false;
+	}
+	
+	return true;
 }
 
 void SimpleFont::drawFormattedText(float x, float y, const char *format, ...)
 {
 	SDL_Surface *textSurface;
 	
-	if (ttfFont == NULL) return;
+	if (ttfFont_ == NULL) return;
 	
 	// Make sure the caller actually passed in a string.
 	if (format == NULL || format[0] == 0) return;
@@ -124,7 +134,7 @@ void SimpleFont::drawFormattedText(float x, float y, const char *format, ...)
 	vsnprintf(textFormatBuffer, kSimpleFontMaxTextLength, format, args);
 	va_end(args);
 	
-	textSurface = TTF_RenderText_Blended(ttfFont, textFormatBuffer, kTextColor);
+	textSurface = TTF_RenderText_Blended(ttfFont_, textFormatBuffer, kTextColor);
 	
 	glPushAttrib(GL_ENABLE_BIT);
 	glEnable(GL_BLEND);
@@ -132,16 +142,16 @@ void SimpleFont::drawFormattedText(float x, float y, const char *format, ...)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
 	this->ensureTextureHandle();
-	if (copySurfaceToTexture(textSurface, textureCoordinates))
+	if (copySurfaceToTexture(textSurface, textureCoordinates_))
 	{
 		glBegin(GL_TRIANGLE_STRIP);
-		glTexCoord2f(textureCoordinates[0], textureCoordinates[1]);
+		glTexCoord2f(textureCoordinates_[0], textureCoordinates_[1]);
 		glVertex2f(x, y + textSurface->h);
-		glTexCoord2f(textureCoordinates[2], textureCoordinates[1]);
+		glTexCoord2f(textureCoordinates_[2], textureCoordinates_[1]);
 		glVertex2f(x + textSurface->w, y + textSurface->h);
-		glTexCoord2f(textureCoordinates[0], textureCoordinates[3]);
+		glTexCoord2f(textureCoordinates_[0], textureCoordinates_[3]);
 		glVertex2f(x, y);
-		glTexCoord2f(textureCoordinates[2], textureCoordinates[3]);
+		glTexCoord2f(textureCoordinates_[2], textureCoordinates_[3]);
 		glVertex2f(x + textSurface->w, y);
 		glEnd();
 	}
@@ -149,17 +159,20 @@ void SimpleFont::drawFormattedText(float x, float y, const char *format, ...)
 	SDL_FreeSurface(textSurface);
 }
 
-SimpleFont *SimpleFont::loadFromFile(const char *fileName, int pointSize)
+void SimpleFont::ensureTextureHandle()
 {
-	ensureInitialized();
-
-	TTF_Font *font = TTF_OpenFont(fileName, pointSize);
-	if (font == NULL)
+	if (textureHandle_ == 0)
 	{
-		return NULL;
+		glGenTextures(1, &textureHandle_);
 	}
-	
-	SimpleFont *simpleFont = new SimpleFont();
-	simpleFont->ttfFont = font;
-	return simpleFont;
+	glBindTexture(GL_TEXTURE_2D, textureHandle_);
+}
+
+void SimpleFont::releaseTextureHandle()
+{
+	if (textureHandle_ != 0)
+	{
+		glDeleteTextures(1, &textureHandle_);
+		textureHandle_ = 0;
+	}
 }
